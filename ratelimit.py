@@ -78,9 +78,8 @@ class RateLimiter(object):
 
             if requests < 0:
                 raise ValueError('negative number of requests (%s)' % requests)
-
             if seconds < 0:
-                raise ValueError('negative time period given (%s)' % requests)
+                raise ValueError('negative time period given (%s)' % seconds)
 
             if seconds > 0:
                 if requests == 0:
