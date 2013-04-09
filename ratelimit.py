@@ -136,19 +136,19 @@ class RateLimiter(object):
         """ 
         if block:
             while True:
-                success, wait = self._is_blocked(key)
+                success, wait = self._make_ping(key)
                 if success:
                     return True
                 self.log.debug('blocking acquire sleeping for %.1fs', wait)
                 time.sleep(wait)
         else:
-            success, wait = self._is_blocked(key)
+            success, wait = self._make_ping(key)
             return success
 
     # alternative acquire interface ratelimiter(key)
     __call__ = acquire
 
-    def _is_blocked(self, key):
+    def _make_ping(self, key):
 
         # shortcut if no configured conditions 
         if not self.conditions:
@@ -197,6 +197,7 @@ class RateLimiter(object):
                                 key, requests, seconds, boundry_timestamp + seconds - timestamp)
                         return False, boundry_timestamp + seconds - timestamp
 
+            # record our success
             with self.redis.pipeline() as pipe:
                 pipe.lpush(log_key, timestamp)
                 max_requests, _ = self.conditions[-1]
