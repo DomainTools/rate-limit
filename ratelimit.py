@@ -165,8 +165,6 @@ class RateLimiter(object):
         block_key = ':'.join((self.namespace, key, 'block'))
         lock_key = ':'.join((self.namespace, key, 'lock'))
 
-        timestamp = time.time()
-
         with self.redis.lock(lock_key):
 
             with self.redis.pipeline() as pipe:
@@ -187,6 +185,8 @@ class RateLimiter(object):
                     block_ttl = 0.5
                 self.log.warn('(%s) hit manual block. %ss remaining', key, block_ttl)
                 return False, block_ttl
+
+            timestamp = time.time()
 
             for boundry_timestamp, (requests, seconds) in izip(boundry_timestamps, self.conditions):
                 # if we dont yet have n number of requests boundry_timestamp will be None and this condition wont be limiting
