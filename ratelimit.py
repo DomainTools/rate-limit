@@ -113,7 +113,7 @@ class RateLimiter(object):
             seconds = self.list_ttl
 
             if not seconds:
-                self.log.warn('block called but default block time. not blocking')
+                self.log.warn('block called but no default block time. not blocking')
                 return 0
 
         if not isinstance(seconds, int):
