@@ -165,7 +165,7 @@ class RateLimiter(object):
         block_key = ':'.join((self.namespace, key, 'block'))
         lock_key = ':'.join((self.namespace, key, 'lock'))
 
-        with self.redis.lock(lock_key):
+        with self.redis.lock(lock_key, timeout=10):
 
             with self.redis.pipeline() as pipe:
                 for requests, _ in self.conditions:
